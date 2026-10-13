@@ -1,8 +1,8 @@
-{
+﻿{
   "name": "gnva-sticker-studio",
   "version": "2.0.0",
   "private": true,
-  "description": "GNVA Sticker Studio — génération locale de grandes séries d'autocollants",
+  "description": "GNVA Sticker Studio - generation locale de grandes series d autocollants",
   "author": {
     "name": "Andre07-omeo",
     "email": "andre07.omeo@example.com"
@@ -34,8 +34,8 @@
     "sharp": "^0.34.5"
   },
   "devDependencies": {
-    "electron": "^44.7.0",
-    "electron-builder": "^26.15.3",
+    "electron": "44.7.0",
+    "electron-builder": "26.15.3",
     "jsqr": "^1.4.0"
   },
   "build": {
@@ -59,41 +59,27 @@
       "target": [
         {
           "target": "nsis",
-          "arch": [
-            "x64"
-          ]
+          "arch": ["x64"]
         }
-      ],
-      "icon": "assets/icon.ico"
+      ]
     },
     "mac": {
       "target": [
         {
           "target": "dmg",
-          "arch": [
-            "arm64",
-            "x64"
-          ]
+          "arch": ["arm64", "x64"]
         }
-      ],
-      "icon": "assets/icon.icns",
-      "category": "public.app-category.graphics-design"
+      ]
     },
     "linux": {
       "target": [
         {
           "target": "AppImage",
-          "arch": [
-            "x64"
-          ]
+          "arch": ["x64"]
         }
       ],
       "executableName": "gnva-sticker-studio",
-      "desktopName": "gnva-sticker-studio.desktop",
-      "category": "Graphics",
-      "synopsis": "Générateur d'autocollants QR",
-      "description": "GNVA Sticker Studio — génération locale de grandes séries d'autocollants",
-      "icon": "assets/icon.png"
+      "category": "Graphics"
     },
     "nsis": {
       "oneClick": false,

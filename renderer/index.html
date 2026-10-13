@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' data:; img-src 'self' data:; style-src 'self'; script-src 'self';"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light" />
+    <title>GNVA Sticker Studio</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="GNVA Sticker Studio">
+          <span class="brand-mark">G</span>
+          <span class="brand-copy">
+            <strong>GNVA</strong>
+            <small>STICKER STUDIO</small>
+          </span>
+        </a>
+        <div class="topbar-right">
+          <span class="local-badge"><i></i> Traitement local</span>
+          <span class="version-label">VERSION 2.0</span>
+        </div>
+      </header>
+
+      <main>
+        <section class="intro">
+          <div>
+            <p class="eyebrow">ATELIER DE PRODUCTION</p>
+            <h1>Vos autocollants,<br /><span>prêts pour l’impression.</span></h1>
+              <p class="intro-copy">Importez votre maquette sans en modifier les dimensions, puis ajoutez les QR codes et numéros du CSV.</p>
+          </div>
+          <div class="intro-side">
+            <span class="intro-stamp">100 000+</span>
+            <span class="intro-stamp-caption">lignes traitées<br />en flux continu</span>
+          </div>
+        </section>
+
+        <section class="workspace">
+          <aside class="left-panel panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">VOTRE LOT</p>
+                <h2>Fichiers source</h2>
+              </div>
+              <span class="step-number">01</span>
+            </div>
+
+            <button id="choose-design" class="file-card" type="button">
+              <span class="file-icon design-icon">A</span>
+              <span class="file-card-copy">
+                <strong>Maquette</strong>
+                <small id="design-status">PNG, JPG, TIFF, WebP, SVG ou PDF</small>
+              </span>
+              <span class="arrow">↗</span>
+            </button>
+            <button id="choose-csv" class="file-card" type="button">
+              <span class="file-icon data-icon">CSV</span>
+              <span class="file-card-copy">
+                <strong>Liste des QR codes</strong>
+                <small id="csv-status">Colonnes obligatoires : numeroAffiche et urlPublique</small>
+              </span>
+              <span class="arrow">↗</span>
+            </button>
+            <button id="choose-output" class="file-card" type="button">
+              <span class="file-icon folder-icon">↗</span>
+              <span class="file-card-copy">
+                <strong>Dossier de livraison</strong>
+                <small id="output-status">Choisissez un emplacement</small>
+              </span>
+              <span class="arrow">↗</span>
+            </button>
+
+            <div id="csv-summary" class="csv-summary" hidden>
+              <div class="summary-top"><span>ENTRÉES DÉTECTÉES</span><b id="csv-count">0</b></div>
+              <div id="csv-sample" class="csv-sample"></div>
+              <div id="csv-url-warning" class="url-warning" hidden role="alert">
+                <strong>Liens locaux détectés</strong>
+                <p id="csv-url-warning-copy"></p>
+                <label><input id="confirm-local-url-test" type="checkbox" /><span>Je confirme qu’il s’agit d’un lot de test local.</span></label>
+              </div>
+            </div>
+
+            <div class="panel-rule"></div>
+            <div class="source-note">
+              <span class="note-icon">i</span>
+              <p>Votre CSV et vos maquettes restent sur cet ordinateur. Aucun fichier n’est envoyé en ligne.</p>
+            </div>
+          </aside>
+
+          <section class="preview-panel panel">
+            <div class="panel-heading preview-heading">
+              <div>
+                <p class="eyebrow">MISE EN PAGE</p>
+                <h2>Positionnez vos éléments</h2>
+              </div>
+              <span id="design-dimensions" class="dimension-tag">En attente du design</span>
+            </div>
+            <p class="preview-hint">La maquette et ses dimensions restent verrouillées. Seuls le QR et le numéro sont ajoutés.</p>
+
+            <div id="preview-empty" class="preview-empty">
+              <div class="empty-sheet">
+                <span class="empty-corner top-left"></span><span class="empty-corner top-right"></span>
+                <span class="empty-corner bottom-left"></span><span class="empty-corner bottom-right"></span>
+                <span class="empty-glyph">A</span>
+              </div>
+              <strong>Votre aperçu apparaîtra ici</strong>
+              <span>Commencez par choisir une maquette.</span>
+            </div>
+            <div id="preview-scroll" class="preview-scroll" hidden>
+              <div id="preview-stage" class="preview-stage">
+                <img id="preview-image" alt="Aperçu de la maquette sélectionnée" draggable="false" />
+                <div id="qr-overlay" class="overlay qr-overlay" role="button" aria-label="Déplacer le QR code">
+                  <img id="qr-overlay-image" alt="Aperçu du QR avec le logo au centre" draggable="false" />
+                </div>
+                <div id="number-overlay" class="overlay number-overlay" role="button" aria-label="Déplacer le numéro">
+                  000001
+                </div>
+              </div>
+            </div>
+
+            <div class="preview-footer">
+              <span><i class="legend-qr"></i> QR code</span>
+              <span><i class="legend-number"></i> Numéro affiché</span>
+              <span id="quality-note">Sortie haute résolution</span>
+            </div>
+          </section>
+
+          <aside class="settings-panel panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">RÉGLAGES</p>
+                <h2>Production</h2>
+              </div>
+              <span class="step-number">02</span>
+            </div>
+
+            <section class="setting-block">
+              <div class="setting-title">
+                <div><h3>Code QR</h3><p>Correction d’erreur renforcée</p></div>
+                <span class="setting-index">A</span>
+              </div>
+              <label class="range-label" for="qr-size">
+                <span>Dimension</span><b id="qr-size-value">24 %</b>
+              </label>
+              <input id="qr-size" type="range" min="1" max="100" value="24" />
+              <p id="qr-quality-warning" class="qr-quality-warning" hidden></p>
+              <div class="coordinate-grid">
+                <label>X <input id="qr-x" type="number" min="0" value="0" /></label>
+                <label>Y <input id="qr-y" type="number" min="0" value="0" /></label>
+              </div>
+            </section>
+
+            <section class="setting-block number-settings">
+              <div class="setting-title">
+                <div><h3>Numéro imprimé</h3><p>Personnalisable par ligne CSV</p></div>
+                <label class="switch">
+                  <input id="show-number" type="checkbox" checked />
+                  <span></span>
+                </label>
+              </div>
+              <div id="number-fields">
+                <div class="coordinate-grid">
+                  <label>X <input id="number-x" type="number" min="0" value="0" /></label>
+                  <label>Y <input id="number-y" type="number" min="0" value="0" /></label>
+                </div>
+                <div class="font-grid">
+                  <label>Police
+                    <select id="font">
+                      <option>Arial</option>
+                      <option>Helvetica</option>
+                      <option>Times New Roman</option>
+                      <option>Courier New</option>
+                      <option>Verdana</option>
+                    </select>
+                  </label>
+                  <label>Taille <input id="font-size" type="number" min="8" max="500" value="42" /></label>
+                </div>
+                <div class="font-options">
+                  <label class="color-label">Couleur <input id="number-color" type="color" value="#161a17" /></label>
+                  <label class="check-label"><input id="font-bold" type="checkbox" checked /><span>Gras</span></label>
+                </div>
+              </div>
+            </section>
+
+            <section class="setting-block export-settings">
+              <div class="setting-title">
+                <div><h3>Formats de sortie</h3><p>Sélection multiple</p></div>
+              </div>
+              <div class="format-grid">
+                <label class="format-choice"><input type="checkbox" value="jpg" checked /><span>JPG</span><small>Compact</small></label>
+                <label class="format-choice"><input type="checkbox" value="png" /><span>PNG</span><small>Sans perte</small></label>
+                <label class="format-choice"><input type="checkbox" value="tiff" /><span>TIFF</span><small>Impression</small></label>
+                <label class="format-choice"><input type="checkbox" value="pdf" /><span>PDF</span><small>Un sticker / PDF</small></label>
+                <label class="format-choice"><input type="checkbox" value="webp" /><span>WebP</span><small>Web optimisé</small></label>
+                <label class="format-choice"><input type="checkbox" value="avif" /><span>AVIF</span><small>Web haute qualité</small></label>
+                <label class="format-choice"><input type="checkbox" value="gif" /><span>GIF</span><small>Palette 256 couleurs</small></label>
+              </div>
+              <div class="font-grid quality-grid">
+                <label>Qualité JPG <input id="jpeg-quality" type="number" min="90" max="100" value="95" /></label>
+                <label>Résolution verrouillée <span id="design-dpi" class="locked-value">—</span></label>
+              </div>
+              <label class="range-label worker-label" for="concurrency">
+                <span>Travaux simultanés</span><b id="concurrency-value">4</b>
+              </label>
+              <input id="concurrency" type="range" min="1" max="8" value="4" />
+              <small class="range-help">Augmentez selon la mémoire disponible sur votre ordinateur.</small>
+            </section>
+
+            <div class="action-area">
+              <div id="estimate" class="estimate-line">Choisissez vos fichiers pour préparer le lot.</div>
+              <button id="generate" class="primary-button" type="button" disabled>
+                <span>Lancer la génération</span><span class="button-arrow">→</span>
+              </button>
+              <button id="cancel-job" class="cancel-button" type="button" hidden>Arrêter le lot</button>
+            </div>
+          </aside>
+        </section>
+
+        <section id="progress-panel" class="progress-panel panel" hidden>
+          <div class="progress-top">
+            <div>
+              <p class="eyebrow">GÉNÉRATION EN COURS</p>
+              <h2 id="progress-title">Préparation du lot</h2>
+            </div>
+            <strong id="progress-percent">0%</strong>
+          </div>
+          <div class="progress-track"><div id="progress-fill"></div></div>
+          <div class="progress-details">
+            <span id="progress-count">En attente</span>
+            <span id="progress-speed">—</span>
+            <span id="progress-output"></span>
+          </div>
+        </section>
+
+        <section id="result-panel" class="result-panel panel" hidden>
+          <div class="result-mark" id="result-mark">✓</div>
+          <div class="result-copy">
+            <p class="eyebrow" id="result-eyebrow">LOT TERMINÉ</p>
+            <h2 id="result-title">Votre lot est prêt</h2>
+            <p id="result-summary"></p>
+            <span id="result-path" class="result-path"></span>
+          </div>
+          <button id="open-output" class="secondary-button" type="button">Ouvrir le dossier <span>↗</span></button>
+        </section>
+
+        <footer>
+          <span>GNVA STICKER STUDIO</span>
+          <span>Fichiers traités en local · Export organisé par format</span>
+        </footer>
+      </main>
+    </div>
+    <script src="./app.js"></script>
+  </body>
+</html>

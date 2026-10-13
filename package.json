@@ -1,0 +1,89 @@
+{
+  "name": "@workspace/gnva-sticker-generator",
+  "version": "2.0.0",
+  "private": true,
+  "description": "GNVA Sticker Studio — génération locale de grandes séries d’autocollants",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win nsis",
+    "build:mac": "electron-builder --mac dmg",
+    "build:linux": "electron-builder --linux AppImage",
+    "pack:dir": "electron-builder --dir",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "csv-parse": "^6.1.0",
+    "pdf-to-png-converter": "^4.2.1",
+    "pdfkit": "^0.20.2",
+    "qrcode-svg": "^1.1.0",
+    "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "electron": "^44.7.0",
+    "electron-builder": "^26.15.3",
+    "jsqr": "^1.4.0"
+  },
+  "build": {
+    "appId": "io.gestion-digitale.gnva",
+    "productName": "GNVA Sticker Studio",
+    "asar": true,
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**/*",
+      "renderer/**/*",
+      "assets/**/*",
+      "package.json",
+      "!**/*.test.js"
+    ],
+    "asarUnpack": [
+      "node_modules/sharp/**/*",
+      "node_modules/@img/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "directories": {
+      "output": "release"
+    }
+  }
+}
